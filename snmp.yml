@@ -1,0 +1,1225 @@
+auths:
+  public_v2:
+    community: public
+    version: 2
+
+modules:
+  if_mib:
+    walk:
+      - 1.3.6.1.2.1.2
+      - 1.3.6.1.2.1.1
+    timeout: 15s
+    retries: 2
+    max_repetitions: 20
+    metrics:
+      - name: interface_status
+        oid: 1.3.6.1.2.1.2.2.1.8
+        type: gauge
+        help: "Status interfejsu sieciowego"
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+      - name: interface_bytes_received
+        oid: 1.3.6.1.2.1.2.2.1.10
+        type: counter
+        help: "Bajty odebrane"
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+      - name: interface_bytes_transmitted
+        oid: 1.3.6.1.2.1.2.2.1.16
+        type: counter
+        help: "Bajty wysłane"
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+      - name: system_description
+        oid: 1.3.6.1.2.1.1.1.0
+        type: DisplayString
+        help: "Opis systemu"
+      - name: system_uptime
+        oid: 1.3.6.1.2.1.1.3.0
+        type: gauge
+        help: "Czas działania"
+
+  large_if:
+    walk:
+      - 1.3.6.1.2.1.2
+      - 1.3.6.1.2.1.1
+    timeout: 30s
+    retries: 2
+    max_repetitions: 50
+    metrics:
+      - name: switch_port_status
+        oid: 1.3.6.1.2.1.2.2.1.8
+        type: gauge
+        help: "Status portu przełącznika"
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+      - name: switch_port_bytes_in
+        oid: 1.3.6.1.2.1.2.2.1.10
+        type: counter
+        help: "Ruch przychodzący"
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+      - name: switch_port_bytes_out
+        oid: 1.3.6.1.2.1.2.2.1.16
+        type: counter
+        help: "Ruch wychodzący"
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+
+  mikrotik_if:
+    walk:
+      - 1.3.6.1.2.1.2
+      - 1.3.6.1.2.1.1
+    timeout: 20s
+    retries: 2
+    max_repetitions: 15
+    metrics:
+      - name: mikrotik_interface_status
+        oid: 1.3.6.1.2.1.2.2.1.8
+        type: gauge
+        help: "Status interfejsu MikroTik"
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+      - name: mikrotik_traffic_received
+        oid: 1.3.6.1.2.1.2.2.1.10
+        type: counter
+        help: "Ruch odebrany"
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+      - name: mikrotik_traffic_sent
+        oid: 1.3.6.1.2.1.2.2.1.16
+        type: counter
+        help: "Ruch wysłany"
+        indexes:
+          - labelname: ifIndex
+            type: gauge
+
+  ilo_health:
+    walk:
+      - 1.3.6.1.2.1.1
+    timeout: 30s
+    retries: 2
+    max_repetitions: 20
+    metrics:
+      - name: ilo_system_description
+        oid: 1.3.6.1.2.1.1.1.0
+        type: DisplayString
+        help: "Opis systemu iLO"
+      - name: ilo_system_uptime
+        oid: 1.3.6.1.2.1.1.3.0
+        type: gauge
+        help: "Czas działania iLO"
+      - name: ilo_system_name
+        oid: 1.3.6.1.2.1.1.5.0
+        type: DisplayString
+        help: "Nazwa systemu iLO"
+
+  xirrus_aos:
+    walk:
+      - 1.3.6.1.4.1.21013.1.2.22
+      - 1.3.6.1.4.1.21013.1.2.24
+      - 1.3.6.1.4.1.21013.1.2.20
+    timeout: 30s
+    retries: 2
+    max_repetitions: 20
+    metrics:
+      - name: wifi_client_mac_address
+        oid: 1.3.6.1.4.1.21013.1.2.22.1.1.2
+        type: DisplayString
+        help: "Adres MAC klienta WiFi"
+        indexes:
+          - labelname: station_index
+            type: gauge
+      - name: access_point_name
+        oid: 1.3.6.1.4.1.21013.1.2.24.1.1.2
+        type: DisplayString
+        help: "Nazwa access pointa"
+        indexes:
+          - labelname: ap_index
+            type: gauge
+      - name: access_point_bytes_received
+        oid: 1.3.6.1.4.1.21013.1.2.24.1.1.7
+        type: counter
+        help: "Bajty odebrane przez AP"
+        indexes:
+          - labelname: ap_index
+            type: gauge
+      - name: access_point_bytes_transmitted
+        oid: 1.3.6.1.4.1.21013.1.2.24.1.1.8
+        type: counter
+        help: "Bajty wysłane przez AP"
+        indexes:
+          - labelname: ap_index
+            type: gauge
+      - name: wifi_network_name
+        oid: 1.3.6.1.4.1.21013.1.2.20.1.1.2
+        type: DisplayString
+        help: "Nazwa sieci WiFi"
+        indexes:
+          - labelname: ssid_index
+            type: gauge
+
+  # ===========================
+  # ilo_hardware_full - KOMPLETNY monitoring HPE DL380 Gen9
+  # ===========================
+  ilo_hardware_full:
+    walk:
+      - 1.3.6.1.2.1.1                      # System info
+      - 1.3.6.1.4.1.232.6.2.6.8.1.4        # Temperatury
+      - 1.3.6.1.4.1.232.6.2.6.7.1.6        # Fan RPM
+      - 1.3.6.1.4.1.232.6.2.6.7.1.9        # Fan Status
+      - 1.3.6.1.4.1.232.6.2.14              # Memory
+      - 1.3.6.1.4.1.232.1.2.2.1.1           # CPU
+      - 1.3.6.1.4.1.232.2.2.4               # Health
+      - 1.3.6.1.4.1.232.3.2.2.1.1           # Storage
+    timeout: 30s
+    retries: 3
+    max_repetitions: 10
+    metrics:
+      # === SYSTEM INFO ===
+      - name: ilo_system_description
+        oid: 1.3.6.1.2.1.1.1.0
+        type: DisplayString
+        help: "Opis systemu iLO"
+
+      - name: ilo_system_uptime
+        oid: 1.3.6.1.2.1.1.3.0
+        type: gauge
+        help: "Czas działania iLO (ticks)"
+
+      - name: ilo_system_name
+        oid: 1.3.6.1.2.1.1.5.0
+        type: DisplayString
+        help: "Nazwa systemu iLO"
+
+      # === TEMPERATURY (10 sensorów) ===
+      - name: hpe_temperature_01
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.1
+        type: gauge
+        help: "Temperatura sensor 01 (°C)"
+
+      - name: hpe_temperature_02
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.2
+        type: gauge
+        help: "Temperatura sensor 02 (°C)"
+
+      - name: hpe_temperature_03
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.3
+        type: gauge
+        help: "Temperatura sensor 03 (°C)"
+
+      - name: hpe_temperature_05
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.5
+        type: gauge
+        help: "Temperatura sensor 05 (°C)"
+
+      - name: hpe_temperature_07
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.7
+        type: gauge
+        help: "Temperatura sensor 07 (°C)"
+
+      - name: hpe_temperature_08
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.8
+        type: gauge
+        help: "Temperatura sensor 08 (°C)"
+
+      - name: hpe_temperature_10
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.10
+        type: gauge
+        help: "Temperatura sensor 10 (°C)"
+
+      - name: hpe_temperature_11
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.11
+        type: gauge
+        help: "Temperatura sensor 11 (°C)"
+
+      - name: hpe_temperature_12
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.12
+        type: gauge
+        help: "Temperatura sensor 12 (°C)"
+
+      - name: hpe_temperature_13
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.13
+        type: gauge
+        help: "Temperatura sensor 13 (°C)"
+
+      # === WENTYLATORY (6 sztuk) ===
+      - name: hpe_fan_status_01
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.9.0.1
+        type: gauge
+        help: "Status wentylatora 01 (2=OK, 3=degraded, 4=failed)"
+
+      - name: hpe_fan_status_02
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.9.0.2
+        type: gauge
+        help: "Status wentylatora 02 (2=OK, 3=degraded, 4=failed)"
+
+      - name: hpe_fan_status_03
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.9.0.3
+        type: gauge
+        help: "Status wentylatora 03 (2=OK, 3=degraded, 4=failed)"
+
+      - name: hpe_fan_status_04
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.9.0.4
+        type: gauge
+        help: "Status wentylatora 04 (2=OK, 3=degraded, 4=failed)"
+
+      - name: hpe_fan_status_05
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.9.0.5
+        type: gauge
+        help: "Status wentylatora 05 (2=OK, 3=degraded, 4=failed)"
+
+      - name: hpe_fan_status_06
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.9.0.6
+        type: gauge
+        help: "Status wentylatora 06 (2=OK, 3=degraded, 4=failed)"
+
+      - name: hpe_fan_speed_01
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.6.0.1
+        type: gauge
+        help: "Prędkość wentylatora 01 (2=low, 3=medium, 4=high)"
+
+      - name: hpe_fan_speed_02
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.6.0.2
+        type: gauge
+        help: "Prędkość wentylatora 02 (2=low, 3=medium, 4=high)"
+
+      - name: hpe_fan_speed_03
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.6.0.3
+        type: gauge
+        help: "Prędkość wentylatora 03 (2=low, 3=medium, 4=high)"
+
+      - name: hpe_fan_speed_04
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.6.0.4
+        type: gauge
+        help: "Prędkość wentylatora 04 (2=low, 3=medium, 4=high)"
+
+      - name: hpe_fan_speed_05
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.6.0.5
+        type: gauge
+        help: "Prędkość wentylatora 05 (2=low, 3=medium, 4=high)"
+
+      - name: hpe_fan_speed_06
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.6.0.6
+        type: gauge
+        help: "Prędkość wentylatora 06 (2=low, 3=medium, 4=high)"
+
+      # === MEMORY ===
+      - name: hpe_memory_total_gb
+        oid: 1.3.6.1.4.1.232.6.2.14.2.0
+        type: gauge
+        help: "Całkowita ilość pamięci RAM (GB)"
+
+      - name: hpe_memory_slots_total
+        oid: 1.3.6.1.4.1.232.6.2.14.3.0
+        type: gauge
+        help: "Całkowita liczba slotów pamięci"
+
+      - name: hpe_memory_slots_used
+        oid: 1.3.6.1.4.1.232.6.2.14.4.0
+        type: gauge
+        help: "Liczba używanych slotów pamięci"
+
+      - name: hpe_memory_status
+        oid: 1.3.6.1.4.1.232.6.2.14.5.0
+        type: gauge
+        help: "Status pamięci (1=OK, 2=degraded, 3=failed)"
+
+      - name: hpe_memory_speed_mhz
+        oid: 1.3.6.1.4.1.232.6.2.14.6.0
+        type: gauge
+        help: "Prędkość pamięci (MHz)"
+
+      - name: hpe_memory_errors
+        oid: 1.3.6.1.4.1.232.6.2.14.7.0
+        type: gauge
+        help: "Liczba błędów pamięci"
+
+      # === CPU ===
+      - name: hpe_cpu_01_status
+        oid: 1.3.6.1.4.1.232.1.2.2.1.1.7.0
+        type: gauge
+        help: "Status CPU 01 (100 = aktywny)"
+
+      - name: hpe_cpu_02_status
+        oid: 1.3.6.1.4.1.232.1.2.2.1.1.7.1
+        type: gauge
+        help: "Status CPU 02 (100 = aktywny)"
+
+      - name: hpe_cpu_01_speed_mhz
+        oid: 1.3.6.1.4.1.232.1.2.2.1.1.4.0
+        type: gauge
+        help: "Prędkość CPU 01 (MHz)"
+
+      - name: hpe_cpu_02_speed_mhz
+        oid: 1.3.6.1.4.1.232.1.2.2.1.1.4.1
+        type: gauge
+        help: "Prędkość CPU 02 (MHz)"
+
+      # === HEALTH STATUS ===
+      - name: hpe_server_model
+        oid: 1.3.6.1.4.1.232.2.2.4.2.0
+        type: DisplayString
+        help: "Model serwera HPE"
+
+      - name: hpe_overall_health
+        oid: 1.3.6.1.4.1.232.2.2.4.24.0
+        type: gauge
+        help: "Ogólny health status (2=OK, 3=warning, 4=critical)"
+
+      - name: hpe_system_health
+        oid: 1.3.6.1.4.1.232.2.2.4.25.0
+        type: gauge
+        help: "System health status (1=other, 2=OK, 3=degraded, 4=failed)"
+
+      # === STORAGE ===
+      - name: hpe_storage_controller_status
+        oid: 1.3.6.1.4.1.232.3.2.2.1.1.6.0
+        type: gauge
+        help: "Status kontrolera storage (2=OK, 3=failed)"
+
+      - name: hpe_storage_controller_version
+        oid: 1.3.6.1.4.1.232.3.2.2.1.1.3.0
+        type: DisplayString
+        help: "Wersja firmware kontrolera storage"
+
+  # ===========================
+  # ilo_power_monitoring - KOMPLETNY monitoring zasilania HPE
+  # ===========================
+  ilo_power_monitoring:
+    walk:
+      - 1.3.6.1.2.1.1                      # System info
+      - 1.3.6.1.4.1.232.6.2.15             # Power Management
+      - 1.3.6.1.4.1.232.6.2.9.3.1          # Power Supply details
+      - 1.3.6.1.4.1.232.6.2.17.2.1         # Battery info
+    timeout: 30s
+    retries: 3
+    max_repetitions: 10
+    metrics:
+      # === SYSTEM INFO ===
+      - name: ilo_system_description
+        oid: 1.3.6.1.2.1.1.1.0
+        type: DisplayString
+        help: "Opis systemu iLO"
+
+      - name: ilo_system_uptime
+        oid: 1.3.6.1.2.1.1.3.0
+        type: gauge
+        help: "Czas działania iLO (ticks)"
+
+      # === POWER MANAGEMENT ===
+      - name: hpe_power_management_status
+        oid: 1.3.6.1.4.1.232.6.2.15.1.0
+        type: gauge
+        help: "Status zarządzania mocą (2=OK)"
+
+      - name: hpe_power_regulator_mode
+        oid: 1.3.6.1.4.1.232.6.2.15.2.0
+        type: gauge
+        help: "Tryb regulatora mocy (2=Dynamic, 3=Static)"
+
+      - name: hpe_power_present_reading_watts
+        oid: 1.3.6.1.4.1.232.6.2.15.3.0
+        type: gauge
+        help: "AKTUALNY POBÓR MOCY w Watts - główna metryka!"
+
+      - name: hpe_power_minimum_watts
+        oid: 1.3.6.1.4.1.232.6.2.15.4.0
+        type: gauge
+        help: "Minimalny pobór mocy w Watts"
+
+      # === POWER SUPPLY 1 ===
+      - name: hpe_psu1_status
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.4.0.1
+        type: gauge
+        help: "Status PSU 1 (2=OK, 3=degraded, 4=failed)"
+
+      - name: hpe_psu1_present
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.5.0.1
+        type: gauge
+        help: "Obecność PSU 1 (1=present, 2=absent)"
+
+      - name: hpe_psu1_voltage
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.6.0.1
+        type: gauge
+        help: "Napięcie wejściowe PSU 1 (Volts)"
+
+      - name: hpe_psu1_power_output_watts
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.7.0.1
+        type: gauge
+        help: "Moc wyjściowa PSU 1 (Watts)"
+
+      - name: hpe_psu1_max_power_watts
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.8.0.1
+        type: gauge
+        help: "Maksymalna moc PSU 1 (Watts)"
+
+      - name: hpe_psu1_efficiency_rating
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.9.0.1
+        type: gauge
+        help: "Rating efektywności PSU 1 (3=80Plus)"
+
+      - name: hpe_psu1_model
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.10.0.1
+        type: DisplayString
+        help: "Model PSU 1"
+
+      - name: hpe_psu1_serial
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.11.0.1
+        type: DisplayString
+        help: "Numer seryjny PSU 1"
+
+      - name: hpe_psu1_firmware_version
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.14.0.1
+        type: DisplayString
+        help: "Wersja firmware PSU 1"
+
+      # === POWER SUPPLY 2 ===
+      - name: hpe_psu2_status
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.4.0.2
+        type: gauge
+        help: "Status PSU 2 (2=OK, 3=degraded, 4=failed)"
+
+      - name: hpe_psu2_present
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.5.0.2
+        type: gauge
+        help: "Obecność PSU 2 (1=present, 2=absent)"
+
+      - name: hpe_psu2_voltage
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.6.0.2
+        type: gauge
+        help: "Napięcie wejściowe PSU 2 (Volts)"
+
+      - name: hpe_psu2_power_output_watts
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.7.0.2
+        type: gauge
+        help: "Moc wyjściowa PSU 2 (Watts)"
+
+      - name: hpe_psu2_max_power_watts
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.8.0.2
+        type: gauge
+        help: "Maksymalna moc PSU 2 (Watts)"
+
+      - name: hpe_psu2_efficiency_rating
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.9.0.2
+        type: gauge
+        help: "Rating efektywności PSU 2 (3=80Plus)"
+
+      - name: hpe_psu2_model
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.10.0.2
+        type: DisplayString
+        help: "Model PSU 2"
+
+      - name: hpe_psu2_serial
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.11.0.2
+        type: DisplayString
+        help: "Numer seryjny PSU 2"
+
+      - name: hpe_psu2_firmware_version
+        oid: 1.3.6.1.4.1.232.6.2.9.3.1.14.0.2
+        type: DisplayString
+        help: "Wersja firmware PSU 2"
+
+      # === RAID BATTERY ===
+      - name: hpe_battery_status
+        oid: 1.3.6.1.4.1.232.6.2.17.2.1.4.0.1
+        type: gauge
+        help: "Status baterii RAID (2=OK, 3=degraded, 4=failed)"
+
+      - name: hpe_battery_charge_percent
+        oid: 1.3.6.1.4.1.232.6.2.17.2.1.6.0.1
+        type: gauge
+        help: "Poziom naładowania baterii RAID (%)"
+
+      - name: hpe_battery_model
+        oid: 1.3.6.1.4.1.232.6.2.17.2.1.7.0.1
+        type: DisplayString
+        help: "Model baterii RAID"
+
+      - name: hpe_battery_part_number
+        oid: 1.3.6.1.4.1.232.6.2.17.2.1.8.0.1
+        type: DisplayString
+        help: "Numer części baterii RAID"
+
+      - name: hpe_battery_serial
+        oid: 1.3.6.1.4.1.232.6.2.17.2.1.9.0.1
+        type: DisplayString
+        help: "Numer seryjny baterii RAID"
+
+  # ===========================
+  # ilo_temperature_complete - WSZYSTKIE dostępne sensory temperatury HPE DL380 Gen9
+  # ===========================
+  ilo_temperature_complete:
+    walk:
+      - 1.3.6.1.2.1.1                      # System info
+      - 1.3.6.1.4.1.232.6.2.6.8.1.4        # Temperature readings
+      - 1.3.6.1.4.1.232.6.2.6.8.1.6        # Sensor status
+      - 1.3.6.1.4.1.232.6.2.6.8.1.7        # Caution thresholds
+    timeout: 30s
+    retries: 3
+    max_repetitions: 25
+    metrics:
+      # === SYSTEM INFO ===
+      - name: ilo_system_description
+        oid: 1.3.6.1.2.1.1.1.0
+        type: DisplayString
+        help: "Opis systemu iLO"
+
+      - name: ilo_system_uptime
+        oid: 1.3.6.1.2.1.1.3.0
+        type: gauge
+        help: "Czas działania iLO (ticks)"
+
+      # === TEMPERATURY - WSZYSTKIE 31 DOSTĘPNYCH SENSORÓW ===
+      
+      # AMBIENT SENSORS
+      - name: hpe_temp_01_inlet_ambient
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.1
+        type: gauge
+        help: "01-Inlet Ambient (29°C) - Temperatura powietrza wlotowego"
+
+      - name: hpe_temp_30_front_ambient
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.30
+        type: gauge
+        help: "30-Front Ambient (36°C) - Temperatura z przodu serwera"
+
+      # CPU SENSORS
+      - name: hpe_temp_02_cpu1
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.2
+        type: gauge
+        help: "02-CPU 1 (40°C) - Temperatura procesora 1"
+
+      - name: hpe_temp_03_cpu2
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.3
+        type: gauge
+        help: "03-CPU 2 (40°C) - Temperatura procesora 2"
+
+      # MEMORY SENSORS
+      - name: hpe_temp_05_p1_dimm_7_12
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.5
+        type: gauge
+        help: "05-P1 DIMM 7-12 (37°C) - Temperatura pamięci procesora 1"
+
+      - name: hpe_temp_07_p2_dimm_7_12
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.7
+        type: gauge
+        help: "07-P2 DIMM 7-12 (41°C) - Temperatura pamięci procesora 2"
+
+      # SYSTEM SENSORS
+      - name: hpe_temp_08_hd_max
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.8
+        type: gauge
+        help: "08-HD Max (35°C) - Maksymalna temperatura dysków"
+
+      - name: hpe_temp_10_chipset
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.10
+        type: gauge
+        help: "10-Chipset (45°C) - Temperatura chipsetu"
+
+      # POWER SUPPLY SENSORS
+      - name: hpe_temp_11_ps1_inlet
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.11
+        type: gauge
+        help: "11-PS 1 Inlet (39°C) - Temperatura wlotu PSU 1"
+
+      - name: hpe_temp_12_ps2_inlet
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.12
+        type: gauge
+        help: "12-PS 2 Inlet (41°C) - Temperatura wlotu PSU 2"
+
+      - name: hpe_temp_19_ps1_internal
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.19
+        type: gauge
+        help: "19-PS 1 Internal (40°C) - Temperatura wewnętrzna PSU 1"
+
+      - name: hpe_temp_20_ps2_internal
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.20
+        type: gauge
+        help: "20-PS 2 Internal (40°C) - Temperatura wewnętrzna PSU 2"
+
+      # VOLTAGE REGULATOR SENSORS
+      - name: hpe_temp_13_vr_p1
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.13
+        type: gauge
+        help: "13-VR P1 (43°C) - Regulator napięcia procesora 1"
+
+      - name: hpe_temp_14_vr_p2
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.14
+        type: gauge
+        help: "14-VR P2 (45°C) - Regulator napięcia procesora 2"
+
+      - name: hpe_temp_15_vr_p1_mem
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.15
+        type: gauge
+        help: "15-VR P1 Mem (39°C) - Regulator pamięci procesora 1"
+
+      - name: hpe_temp_16_vr_p1_mem
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.16
+        type: gauge
+        help: "16-VR P1 Mem (37°C) - Regulator pamięci procesora 1"
+
+      - name: hpe_temp_17_vr_p2_mem
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.17
+        type: gauge
+        help: "17-VR P2 Mem (40°C) - Regulator pamięci procesora 2"
+
+      - name: hpe_temp_18_vr_p2_mem
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.18
+        type: gauge
+        help: "18-VR P2 Mem (41°C) - Regulator pamięci procesora 2"
+
+      # I/O BOARD SENSORS
+      - name: hpe_temp_23_pci3
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.23
+        type: gauge
+        help: "23-PCI 3 (53°C) - Slot PCI 3"
+
+      - name: hpe_temp_27_hd_controller
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.27
+        type: gauge
+        help: "27-HD Controller (66°C) - Kontroler dysków twardych 🔥 NAJGORĘTSZY!"
+
+      - name: hpe_temp_28_lom_card
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.28
+        type: gauge
+        help: "28-LOM Card (44°C) - Karta sieciowa LOM"
+
+      # ZONE SENSORS
+      - name: hpe_temp_31_pci1_zone
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.31
+        type: gauge
+        help: "31-PCI 1 Zone (38°C) - Strefa PCI 1"
+
+      - name: hpe_temp_32_pci2_zone
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.32
+        type: gauge
+        help: "32-PCI 2 Zone (39°C) - Strefa PCI 2"
+
+      - name: hpe_temp_33_pci3_zone
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.33
+        type: gauge
+        help: "33-PCI 3 Zone (39°C) - Strefa PCI 3"
+
+      - name: hpe_temp_37_hd_cntlr_zone
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.37
+        type: gauge
+        help: "37-HD Controller Zone (49°C) - Strefa kontrolera dysków"
+
+      - name: hpe_temp_38_io_zone
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.38
+        type: gauge
+        help: "38-I/O Zone (37°C) - Strefa I/O"
+
+      - name: hpe_temp_39_p_s2_zone
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.39
+        type: gauge
+        help: "39-P/S 2 Zone (41°C) - Strefa procesora/systemu 2"
+
+      - name: hpe_temp_40_battery_zone
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.40
+        type: gauge
+        help: "40-Battery Zone (41°C) - Strefa baterii"
+
+      - name: hpe_temp_41_ilo_zone
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.41
+        type: gauge
+        help: "41-iLO Zone (46°C) - Strefa iLO"
+
+      - name: hpe_temp_43_storage_batt
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.43
+        type: gauge
+        help: "43-Storage Battery (37°C) - Bateria storage"
+
+      - name: hpe_temp_44_fuse
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.4.0.44
+        type: gauge
+        help: "44-Fuse (41°C) - Bezpiecznik"
+
+      # === STATUS WSZYSTKICH SENSORÓW ===
+      - name: hpe_temp_status_01
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.6.0.1
+        type: gauge
+        help: "Status sensora 01 (2=OK, 3=caution, 4=critical)"
+
+      - name: hpe_temp_status_02
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.6.0.2
+        type: gauge
+        help: "Status sensora 02 (2=OK, 3=caution, 4=critical)"
+
+      - name: hpe_temp_status_03
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.6.0.3
+        type: gauge
+        help: "Status sensora 03 (2=OK, 3=caution, 4=critical)"
+
+      - name: hpe_temp_status_27
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.6.0.27
+        type: gauge
+        help: "Status sensora 27 HD Controller (2=OK, 3=caution, 4=critical)"
+
+      - name: hpe_temp_status_41
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.6.0.41
+        type: gauge
+        help: "Status sensora 41 iLO Zone (2=OK, 3=caution, 4=critical)"
+
+      # === PROGI OSTRZEGAWCZE (CAUTION) ===
+      - name: hpe_temp_caution_01
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.7.0.1
+        type: gauge
+        help: "Próg Caution sensora 01"
+
+      - name: hpe_temp_caution_02
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.7.0.2
+        type: gauge
+        help: "Próg Caution sensora 02"
+
+      - name: hpe_temp_caution_27
+        oid: 1.3.6.1.4.1.232.6.2.6.8.1.7.0.27
+        type: gauge
+        help: "Próg Caution sensora 27 HD Controller"
+
+  # ===========================
+  # ilo_fans_complete - KOMPLETNY monitoring wentylatorów HPE DL380 Gen9
+  # ===========================
+  ilo_fans_complete:
+    walk:
+      - 1.3.6.1.2.1.1                      # System info
+      - 1.3.6.1.4.1.232.6.2.6.7.1.2        # Fan locations
+      - 1.3.6.1.4.1.232.6.2.6.7.1.3        # Fan types
+      - 1.3.6.1.4.1.232.6.2.6.7.1.4        # Fan presence
+      - 1.3.6.1.4.1.232.6.2.6.7.1.5        # Fan condition
+      - 1.3.6.1.4.1.232.6.2.6.7.1.6        # Fan speed level
+      - 1.3.6.1.4.1.232.6.2.6.7.1.7        # Fan RPM category
+      - 1.3.6.1.4.1.232.6.2.6.7.1.8        # Fan speed category
+      - 1.3.6.1.4.1.232.6.2.6.7.1.9        # Fan status
+      - 1.3.6.1.4.1.232.6.2.6.7.1.10       # Other fan data
+    timeout: 30s
+    retries: 3
+    max_repetitions: 10
+    metrics:
+      # === SYSTEM INFO ===
+      - name: ilo_system_description
+        oid: 1.3.6.1.2.1.1.1.0
+        type: DisplayString
+        help: "Opis systemu iLO"
+
+      - name: ilo_system_uptime
+        oid: 1.3.6.1.2.1.1.3.0
+        type: gauge
+        help: "Czas działania iLO (ticks)"
+
+      # === FAN 1 ===
+      - name: hpe_fan_01_location
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.2.0.1
+        type: gauge
+        help: "Fan 1 - Lokalizacja (1=Fan1)"
+
+      - name: hpe_fan_01_type
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.3.0.1
+        type: gauge
+        help: "Fan 1 - Typ (3=System)"
+
+      - name: hpe_fan_01_present
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.4.0.1
+        type: gauge
+        help: "Fan 1 - Obecność (3=Present, 2=Absent)"
+
+      - name: hpe_fan_01_condition
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.5.0.1
+        type: gauge
+        help: "Fan 1 - Kondycja (3=OK, 4=degraded, 5=failed)"
+
+      - name: hpe_fan_01_speed_level
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.6.0.1
+        type: gauge
+        help: "Fan 1 - Poziom prędkości (2=Low/28%, 3=Medium, 4=High)"
+
+      - name: hpe_fan_01_rpm_category
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.7.0.1
+        type: gauge
+        help: "Fan 1 - Kategoria RPM (3=Normal)"
+
+      - name: hpe_fan_01_speed_category
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.8.0.1
+        type: gauge
+        help: "Fan 1 - Kategoria prędkości (2=Low)"
+
+      - name: hpe_fan_01_status
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.9.0.1
+        type: gauge
+        help: "Fan 1 - Status (2=OK, 3=degraded, 4=failed)"
+
+      - name: hpe_fan_01_other
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.10.0.1
+        type: gauge
+        help: "Fan 1 - Inne dane (3=System fan)"
+
+      # === FAN 2 ===
+      - name: hpe_fan_02_location
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.2.0.2
+        type: gauge
+        help: "Fan 2 - Lokalizacja (2=Fan2)"
+
+      - name: hpe_fan_02_type
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.3.0.2
+        type: gauge
+        help: "Fan 2 - Typ (3=System)"
+
+      - name: hpe_fan_02_present
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.4.0.2
+        type: gauge
+        help: "Fan 2 - Obecność (3=Present)"
+
+      - name: hpe_fan_02_condition
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.5.0.2
+        type: gauge
+        help: "Fan 2 - Kondycja (3=OK)"
+
+      - name: hpe_fan_02_speed_level
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.6.0.2
+        type: gauge
+        help: "Fan 2 - Poziom prędkości (2=Low/28%)"
+
+      - name: hpe_fan_02_rpm_category
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.7.0.2
+        type: gauge
+        help: "Fan 2 - Kategoria RPM (3=Normal)"
+
+      - name: hpe_fan_02_speed_category
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.8.0.2
+        type: gauge
+        help: "Fan 2 - Kategoria prędkości (3)"
+
+      - name: hpe_fan_02_status
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.9.0.2
+        type: gauge
+        help: "Fan 2 - Status (2=OK)"
+
+      - name: hpe_fan_02_other
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.10.0.2
+        type: gauge
+        help: "Fan 2 - Inne dane (3=System fan)"
+
+      # === FAN 3 ===
+      - name: hpe_fan_03_location
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.2.0.3
+        type: gauge
+        help: "Fan 3 - Lokalizacja (3=Fan3)"
+
+      - name: hpe_fan_03_present
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.4.0.3
+        type: gauge
+        help: "Fan 3 - Obecność (3=Present)"
+
+      - name: hpe_fan_03_condition
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.5.0.3
+        type: gauge
+        help: "Fan 3 - Kondycja (3=OK)"
+
+      - name: hpe_fan_03_speed_level
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.6.0.3
+        type: gauge
+        help: "Fan 3 - Poziom prędkości (2=Low/28%)"
+
+      - name: hpe_fan_03_status
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.9.0.3
+        type: gauge
+        help: "Fan 3 - Status (2=OK)"
+
+      # === FAN 4 ===
+      - name: hpe_fan_04_location
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.2.0.4
+        type: gauge
+        help: "Fan 4 - Lokalizacja (4=Fan4)"
+
+      - name: hpe_fan_04_present
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.4.0.4
+        type: gauge
+        help: "Fan 4 - Obecność (3=Present)"
+
+      - name: hpe_fan_04_condition
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.5.0.4
+        type: gauge
+        help: "Fan 4 - Kondycja (3=OK)"
+
+      - name: hpe_fan_04_speed_level
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.6.0.4
+        type: gauge
+        help: "Fan 4 - Poziom prędkości (2=Low/28%)"
+
+      - name: hpe_fan_04_status
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.9.0.4
+        type: gauge
+        help: "Fan 4 - Status (2=OK)"
+
+      # === FAN 5 ===
+      - name: hpe_fan_05_location
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.2.0.5
+        type: gauge
+        help: "Fan 5 - Lokalizacja (5=Fan5)"
+
+      - name: hpe_fan_05_present
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.4.0.5
+        type: gauge
+        help: "Fan 5 - Obecność (3=Present)"
+
+      - name: hpe_fan_05_condition
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.5.0.5
+        type: gauge
+        help: "Fan 5 - Kondycja (3=OK)"
+
+      - name: hpe_fan_05_speed_level
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.6.0.5
+        type: gauge
+        help: "Fan 5 - Poziom prędkości (2=Low/28%)"
+
+      - name: hpe_fan_05_status
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.9.0.5
+        type: gauge
+        help: "Fan 5 - Status (2=OK)"
+
+      # === FAN 6 ===
+      - name: hpe_fan_06_location
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.2.0.6
+        type: gauge
+        help: "Fan 6 - Lokalizacja (6=Fan6)"
+
+      - name: hpe_fan_06_present
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.4.0.6
+        type: gauge
+        help: "Fan 6 - Obecność (3=Present)"
+
+      - name: hpe_fan_06_condition
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.5.0.6
+        type: gauge
+        help: "Fan 6 - Kondycja (3=OK)"
+
+      - name: hpe_fan_06_speed_level
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.6.0.6
+        type: gauge
+        help: "Fan 6 - Poziom prędkości (2=Low/28%)"
+
+      - name: hpe_fan_06_status
+        oid: 1.3.6.1.4.1.232.6.2.6.7.1.9.0.6
+        type: gauge
+        help: "Fan 6 - Status (2=OK)"
+
+  # ===========================
+  # ilo_network_complete - KOMPLETNY monitoring sieci HPE DL380 Gen9
+  # ===========================
+  ilo_network_complete:
+    walk:
+      - 1.3.6.1.2.1.1                      # System info
+      - 1.3.6.1.4.1.232.18.1               # Network management
+      - 1.3.6.1.4.1.232.18.2.3.1.1         # Network ports
+      - 1.3.6.1.4.1.232.9.2.2              # iLO info
+    timeout: 30s
+    retries: 3
+    max_repetitions: 20
+    metrics:
+      # === SYSTEM INFO ===
+      - name: ilo_system_description
+        oid: 1.3.6.1.2.1.1.1.0
+        type: DisplayString
+        help: "Opis systemu iLO"
+
+      - name: ilo_system_uptime
+        oid: 1.3.6.1.2.1.1.3.0
+        type: gauge
+        help: "Czas działania iLO (ticks)"
+
+      # === NETWORK MANAGEMENT ===
+      - name: hpe_network_mgmt_status
+        oid: 1.3.6.1.4.1.232.18.1.1.0
+        type: gauge
+        help: "Status zarządzania siecią (1=OK)"
+
+      - name: hpe_network_mgmt_version
+        oid: 1.3.6.1.4.1.232.18.1.2.0
+        type: gauge
+        help: "Wersja zarządzania siecią (46)"
+
+      - name: hpe_network_mgmt_config
+        oid: 1.3.6.1.4.1.232.18.1.3.0
+        type: gauge
+        help: "Konfiguracja zarządzania siecią (2)"
+
+      # === iLO INFO ===
+      - name: ilo_firmware_date
+        oid: 1.3.6.1.4.1.232.9.2.2.1.0
+        type: DisplayString
+        help: "Data firmware iLO"
+
+      - name: ilo_firmware_version
+        oid: 1.3.6.1.4.1.232.9.2.2.2.0
+        type: DisplayString
+        help: "Wersja firmware iLO"
+
+      - name: ilo_status
+        oid: 1.3.6.1.4.1.232.9.2.2.7.0
+        type: gauge
+        help: "Status iLO (2=OK)"
+
+      - name: ilo_serial_number
+        oid: 1.3.6.1.4.1.232.9.2.2.15.0
+        type: DisplayString
+        help: "Numer seryjny iLO"
+
+      # === PORT 1 - FlexFabric 10Gb Port 1 ===
+      - name: hpe_net_port_01_index
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.1.1
+        type: gauge
+        help: "Port 1 Index (FlexFabric 10Gb Port 1)"
+
+      - name: hpe_net_port_01_status
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.3.1
+        type: gauge
+        help: "Port 1 Status (255=unknown, 1=OK)"
+
+      - name: hpe_net_port_01_mac
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.4.1
+        type: DisplayString
+        help: "Port 1 MAC: 14:02:EC:3C:49:08 (FlexFabric 10Gb)"
+
+      - name: hpe_net_port_01_link_status
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.8.1
+        type: gauge
+        help: "Port 1 Link Status (-1=down, 1=up)"
+
+      # === PORT 2 - FlexFabric 10Gb Port 2 ===
+      - name: hpe_net_port_02_index
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.1.2
+        type: gauge
+        help: "Port 2 Index (FlexFabric 10Gb Port 2)"
+
+      - name: hpe_net_port_02_status
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.3.2
+        type: gauge
+        help: "Port 2 Status (255=unknown, 1=OK)"
+
+      - name: hpe_net_port_02_mac
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.4.2
+        type: DisplayString
+        help: "Port 2 MAC: 14:02:EC:3C:49:0C (FlexFabric 10Gb)"
+
+      - name: hpe_net_port_02_link_status
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.8.2
+        type: gauge
+        help: "Port 2 Link Status (-1=down, 1=up)"
+
+      # === PORT 3 - Ethernet 1Gb Port 1 ===
+      - name: hpe_net_port_03_index
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.1.3
+        type: gauge
+        help: "Port 3 Index (Ethernet 1Gb Port 1)"
+
+      - name: hpe_net_port_03_status
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.3.3
+        type: gauge
+        help: "Port 3 Status (255=unknown, 1=OK)"
+
+      - name: hpe_net_port_03_mac
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.4.3
+        type: DisplayString
+        help: "Port 3 MAC: E0:07:1B:F6:13:84 (Ethernet 1Gb)"
+
+      - name: hpe_net_port_03_link_status
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.8.3
+        type: gauge
+        help: "Port 3 Link Status (-1=down, 1=up)"
+
+      # === PORT 4 - Ethernet 1Gb Port 2 ===
+      - name: hpe_net_port_04_index
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.1.4
+        type: gauge
+        help: "Port 4 Index (Ethernet 1Gb Port 2)"
+
+      - name: hpe_net_port_04_status
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.3.4
+        type: gauge
+        help: "Port 4 Status (255=unknown, 1=OK)"
+
+      - name: hpe_net_port_04_mac
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.4.4
+        type: DisplayString
+        help: "Port 4 MAC: E0:07:1B:F6:13:85 (Ethernet 1Gb)"
+
+      - name: hpe_net_port_04_link_status
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.8.4
+        type: gauge
+        help: "Port 4 Link Status (-1=down, 1=up)"
+
+      # === PORT 5 - Ethernet 1Gb Port 3 ===
+      - name: hpe_net_port_05_index
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.1.5
+        type: gauge
+        help: "Port 5 Index (Ethernet 1Gb Port 3)"
+
+      - name: hpe_net_port_05_status
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.3.5
+        type: gauge
+        help: "Port 5 Status (255=unknown, 1=OK)"
+
+      - name: hpe_net_port_05_mac
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.4.5
+        type: DisplayString
+        help: "Port 5 MAC: E0:07:1B:F6:13:86 (Ethernet 1Gb)"
+
+      - name: hpe_net_port_05_link_status
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.8.5
+        type: gauge
+        help: "Port 5 Link Status (-1=down, 1=up)"
+
+      # === PORT 6 - Ethernet 1Gb Port 4 ===
+      - name: hpe_net_port_06_index
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.1.6
+        type: gauge
+        help: "Port 6 Index (Ethernet 1Gb Port 4)"
+
+      - name: hpe_net_port_06_status
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.3.6
+        type: gauge
+        help: "Port 6 Status (255=unknown, 1=OK)"
+
+      - name: hpe_net_port_06_mac
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.4.6
+        type: DisplayString
+        help: "Port 6 MAC: E0:07:1B:F6:13:87 (Ethernet 1Gb)"
+
+      - name: hpe_net_port_06_link_status
+        oid: 1.3.6.1.4.1.232.18.2.3.1.1.8.6
+        type: gauge
+        help: "Port 6 Link Status (-1=down, 1=up)"
+
+# Mikrotik RouterOS devices
+mikrotik:
+  walk:
+    - 1.3.6.1.2.1.1                 # sysDescr, sysUpTime etc.
+    - 1.3.6.1.2.1.2.2.1.1           # ifIndex
+    - 1.3.6.1.2.1.2.2.1.2           # ifDescr  
+    - 1.3.6.1.2.1.2.2.1.3           # ifType
+    - 1.3.6.1.2.1.2.2.1.5           # ifSpeed
+    - 1.3.6.1.2.1.2.2.1.7           # ifAdminStatus
+    - 1.3.6.1.2.1.2.2.1.8           # ifOperStatus
+    - 1.3.6.1.2.1.2.2.1.10          # ifInOctets
+    - 1.3.6.1.2.1.2.2.1.11          # ifInUcastPkts
+    - 1.3.6.1.2.1.2.2.1.16          # ifOutOctets  
+    - 1.3.6.1.2.1.2.2.1.17          # ifOutUcastPkts
+  lookups:
+    - source_indexes: [ifIndex]
+      lookup: 1.3.6.1.2.1.2.2.1.2  # ifDescr
+      drop_source_indexes: true
+  overrides:
+    ifAdminStatus:
+      type: gauge
+    ifOperStatus:
+      type: gauge
+    ifType:
+      type: gauge
